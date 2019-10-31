@@ -1,6 +1,7 @@
 package com.codegym.cms.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "employee")
@@ -10,7 +11,7 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String birthDate;
+    private LocalDate birthDate;
     private String address;
     private String avatar;
     private Double salary;
@@ -30,7 +31,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String name, String birthDate, String address, String avatar, Double salary, Department department) {
+    public Employee(String name, LocalDate birthDate, String address, String avatar, Double salary, Department department) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;
@@ -55,11 +56,11 @@ public class Employee {
         this.name = name;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

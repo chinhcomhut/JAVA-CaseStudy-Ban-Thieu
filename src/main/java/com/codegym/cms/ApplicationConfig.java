@@ -2,6 +2,7 @@ package com.codegym.cms;
 
 import com.codegym.cms.formatter.DepartmentFormatter;
 
+import com.codegym.cms.formatter.StringToLocalDateFormatter;
 import com.codegym.cms.service.DepartmentService;
 import com.codegym.cms.service.EmployeeService;
 
@@ -9,12 +10,14 @@ import com.codegym.cms.service.impl.DepartmentServiceImpl;
 import com.codegym.cms.service.impl.EmployeeServiceImpl;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.FormatterRegistry;
@@ -44,18 +47,32 @@ import java.util.Properties;
 @ComponentScan("com.codegym.cms")
 @EnableJpaRepositories("com.codegym.cms.repository")
 @EnableSpringDataWebSupport
+//@PropertySource("classpath:global_config_app.properties")
 public class ApplicationConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
-
+    @Autowired
+    Environment env;
     private ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+    // Cấu hình để sử dụng các file nguồn tĩnh (css, image, js..)
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//
+//        String fileUpload = env.getProperty("file_upload").toString();
+
+        // Image resource.
+//        registry.addResourceHandler("/i/**") //
+//                .addResourceLocations("file:" + fileUpload);
+//
+//    }
 
     @Override
     public void addFormatters(FormatterRegistry registry){
         registry.addFormatter(new DepartmentFormatter(applicationContext.getBean(DepartmentService.class)));
+        registry.addFormatter(new StringToLocalDateFormatter());
     }
 
     @Bean
@@ -138,5 +155,30 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter implements Applic
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
+
+    //Config Formatter
+//    @Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        registry.addFormatter(new StringToLocalDateFormatter());
+//    }
+    //Config FileUpload
+//    @Bean(name = "multipartResolver")
+//    public CommonsMultipartResolver getResolver() throws IOException {
+//        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+
+        //Set the maximum allowed size (in bytes) for each individual file.
+//        resolver.setMaxUploadSizePerFile(5242880);//5MB
+
+        //You may also set other available properties.
+
+//        return resolver;
+//    }
+
+//    @Bean
+//    public MessageSource messageSource() {
+//        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+//        messageSource.setBasenames("ValidationMessages");
+//        return messageSource;
+//    }
 
 }
